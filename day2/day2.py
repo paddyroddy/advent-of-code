@@ -19,12 +19,55 @@ def compute_horizontal_depth_product(df: pd.DataFrame) -> int:
     grouped = df.groupby(["direction"]).sum()
     horizontal = grouped.loc["forward"]
     depth = grouped.loc["down"] - grouped.loc["up"]
-    product = (horizontal * depth)["amount"]
+    product = int(horizontal * depth)
     print(f"Q1 product: {product}")
+    return product
+
+
+def compute_product_factoring_in_aim(df: pd.DataFrame) -> int:
+    """
+    tracking aim in addition to depth and direction
+    """
+    # initialise three columns
+    df["cumulative_depth"] = 0
+    df["cumulative_horizontal"] = 0
+    df["horizontal"] = 0
+    df["depth"] = 0
+    df["aim"] = 0
+
+    # create boolean masks
+    forward_direction = df["direction"] == "forward"
+    up_direction = df["direction"] == "up"
+
+    # set up direction to negative depth and relabel to down
+    df.loc[up_direction, "amount"] *= -1
+    df.loc[up_direction, "direction"] = "down"
+
+    # fill in horizontal values
+    df.loc[forward_direction, "horizontal"] = df.loc[forward_direction, "amount"]
+    df.loc[forward_direction, "cumulative_horizontal"] = (
+        df.groupby("direction").cumsum().loc[forward_direction, "amount"]
+    )
+
+    # fill in aim values
+    df.loc[forward_direction, "amount"] = 0
+    df["aim"] = df["amount"].cumsum()
+
+    # fill in depth values
+    df.loc[forward_direction, "depth"] += (
+        df.loc[forward_direction, "aim"] * df.loc[forward_direction, "horizontal"]
+    )
+    df["cumulative_depth"] = df["depth"].cumsum()
+
+    # compute product
+    product = int(
+        df.iloc[-1]["cumulative_horizontal"] * df.iloc[-1]["cumulative_depth"]
+    )
+    print(f"Q2 product: {product}")
     return product
 
 
 if __name__ == "__main__":
     df = read_data("data_day2.csv")
     compute_horizontal_depth_product(df)
-    # fine_largest_sums(df)
+    compute_product_factoring_in_aim(df)
