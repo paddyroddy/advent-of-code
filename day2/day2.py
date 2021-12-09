@@ -45,9 +45,7 @@ def compute_product_factoring_in_aim(df: pd.DataFrame) -> int:
 
     # fill in horizontal values
     df.loc[forward_direction, "horizontal"] = df.loc[forward_direction, "amount"]
-    df.loc[forward_direction, "cumulative_horizontal"] = (
-        df.groupby("direction").cumsum().loc[forward_direction, "amount"]
-    )
+    df.loc[forward_direction, "cumulative_horizontal"] = df["horizontal"].cumsum()
 
     # fill in aim values
     df.loc[forward_direction, "amount"] = 0
@@ -60,9 +58,8 @@ def compute_product_factoring_in_aim(df: pd.DataFrame) -> int:
     df["cumulative_depth"] = df["depth"].cumsum()
 
     # compute product
-    product = int(
-        df.iloc[-1]["cumulative_horizontal"] * df.iloc[-1]["cumulative_depth"]
-    )
+    final_row = df.iloc[-1]
+    product = int(final_row["cumulative_horizontal"] * final_row["cumulative_depth"])
     print(f"Q2 product: {product}")
     return product
 
