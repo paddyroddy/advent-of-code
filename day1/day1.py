@@ -30,7 +30,6 @@ def fine_largest_sums(df: pd.DataFrame) -> int:
 
 
 if __name__ == "__main__":
-    filename = "data_day1.csv"
-    df = read_data(filename)
+    df = read_data("data_day1.csv")
     find_largest_measurements(df)
     fine_largest_sums(df)
