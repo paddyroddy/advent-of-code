@@ -28,7 +28,7 @@ def compute_product_factoring_in_aim(df: pd.DataFrame) -> int:
     """
     tracking aim in addition to depth and direction
     """
-    # initialise three columns
+    # initialise columns
     df["cumulative_depth"] = 0
     df["cumulative_horizontal"] = 0
     df["horizontal"] = 0
