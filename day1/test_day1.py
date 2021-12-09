@@ -1,17 +1,12 @@
-from pathlib import Path
-
 import pandas as pd
 import pytest
 
-from day1 import find_largest_measurements, fine_largest_sums
-
-_file_location = Path(__file__).resolve()
-_data_path = _file_location.parent
+from day1 import find_largest_measurements, fine_largest_sums, read_data
 
 
 @pytest.fixture
 def dummy_data() -> pd.DataFrame:
-    return pd.read_csv(_data_path / "dummy_day1.csv", header=None)
+    return read_data("dummy_day1.csv")
 
 
 def test_number_depth_increases(dummy_data) -> None:

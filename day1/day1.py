@@ -6,6 +6,10 @@ _file_location = Path(__file__).resolve()
 _data_path = _file_location.parent
 
 
+def read_data(filename: str) -> pd.DataFrame:
+    return pd.read_csv(_data_path / filename, header=None)
+
+
 def find_largest_measurements(df: pd.DataFrame) -> int:
     """
     how many measurements are larger than the previous measurement
@@ -26,6 +30,7 @@ def fine_largest_sums(df: pd.DataFrame) -> int:
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(_data_path / "data_day1.csv", header=None)
+    filename = "data_day1.csv"
+    df = read_data(filename)
     find_largest_measurements(df)
     fine_largest_sums(df)
