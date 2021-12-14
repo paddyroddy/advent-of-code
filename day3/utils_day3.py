@@ -1,14 +1,7 @@
 import pandas as pd
 
 
-def create_df_of_one_and_zero(df: pd.DataFrame, name: str) -> pd.DataFrame:
-    """
-    read in str df and create columns with one and zero
-    """
-    return df[name].str.split("", expand=True).iloc[:, 1:-1]
-
-
-def convert_str_to_bool(df: pd.DataFrame) -> pd.DataFrame:
+def _convert_str_to_bool(df: pd.DataFrame) -> pd.DataFrame:
     """
     convert string datatype to boolean via integer
     """
@@ -22,28 +15,36 @@ def _convert_bool_to_str(df: pd.DataFrame) -> pd.DataFrame:
     return df.astype(int).astype(str)
 
 
-def _find_most_common(df: pd.DataFrame) -> pd.DataFrame:
+def create_df_of_one_and_zero(df: pd.DataFrame, name: str) -> pd.DataFrame:
+    """
+    read in str df and create columns with one and zero
+    """
+    return df[name].str.split("", expand=True).iloc[:, 1:-1]
+
+
+def find_most_common(df: pd.DataFrame) -> pd.DataFrame:
     """
     finds the most common values in dataframe
     """
     return df.mode()
 
 
-def _find_least_common(df: pd.DataFrame) -> int:
+def find_least_common(df: pd.DataFrame) -> int:
     """
     finds the least common values in dataframe,
     this leverages boolean logic to find the anti mode
     """
-    return _convert_bool_to_str(~convert_str_to_bool(_find_most_common(df)))
+    return _convert_bool_to_str(~_convert_str_to_bool(find_most_common(df)))
 
 
-def extract_rate_as_int(df: pd.DataFrame) -> pd.DataFrame:
+def extract_rate_as_int(df: pd.DataFrame) -> int:
     """
     extract rate as integer from dataframe
     """
+    base = 2
     list_of_ints = _convert_bool_to_str(df).iloc[0].to_list()
     binary_str = "".join(list_of_ints)
-    return int(binary_str, 2)
+    return int(binary_str, base)
 
 
 def _modified_mode_for_duplicates(df: pd.DataFrame, favoured: str) -> str:
@@ -63,9 +64,9 @@ def loop_through_df_to_compute_rates(df: pd.DataFrame, favoured: str) -> int:
             break
         df_column = df.iloc[:, i]
         common = (
-            _modified_mode_for_duplicates(_find_most_common(df_column), "1")
+            _modified_mode_for_duplicates(find_most_common(df_column), "1")
             if favoured == "1"
-            else _modified_mode_for_duplicates(_find_least_common(df_column), "0")
+            else _modified_mode_for_duplicates(find_least_common(df_column), "0")
         )
         matching = df_column == common
         df = df.loc[matching].reset_index(drop=True)

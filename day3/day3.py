@@ -2,9 +2,10 @@ from pathlib import Path
 
 import pandas as pd
 from utils_day3 import (
-    convert_str_to_bool,
     create_df_of_one_and_zero,
     extract_rate_as_int,
+    find_least_common,
+    find_most_common,
     loop_through_df_to_compute_rates,
 )
 
@@ -23,13 +24,8 @@ def compute_power_consumption_submarine(df: pd.DataFrame) -> int:
     """
     compute the power consumption of the submarines
     """
-    # most common value
-    df_most_common = convert_str_to_bool(df.mode())
-    df_least_common = ~df_most_common
-
-    # compute product
-    gamma_rate = extract_rate_as_int(df_most_common)
-    epsilon_rate = extract_rate_as_int(df_least_common)
+    gamma_rate = extract_rate_as_int(find_most_common(df))
+    epsilon_rate = extract_rate_as_int(find_least_common(df))
     product = gamma_rate * epsilon_rate
     print(f"Q1 product: {product}")
     return product
