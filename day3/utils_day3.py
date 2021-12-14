@@ -1,6 +1,13 @@
 import pandas as pd
 
 
+def create_df_of_one_and_zero(df: pd.DataFrame, name: str) -> pd.DataFrame:
+    """
+    read in str df and create columns with one and zero
+    """
+    return df[name].str.split("", expand=True).iloc[:, 1:-1]
+
+
 def convert_str_to_bool(df: pd.DataFrame) -> pd.DataFrame:
     """
     convert string datatype to boolean via integer
