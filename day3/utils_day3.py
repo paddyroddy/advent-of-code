@@ -15,17 +15,58 @@ def convert_str_to_bool(df: pd.DataFrame) -> pd.DataFrame:
     return df.astype(int).astype(bool)
 
 
-def convert_bool_to_str(df: pd.DataFrame) -> pd.DataFrame:
+def _convert_bool_to_str(df: pd.DataFrame) -> pd.DataFrame:
     """
     convert boolean datatype to string via integer
     """
     return df.astype(int).astype(str)
 
 
+def _find_most_common(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    finds the most common values in dataframe
+    """
+    return df.mode()
+
+
+def _find_least_common(df: pd.DataFrame) -> int:
+    """
+    finds the least common values in dataframe,
+    this leverages boolean logic to find the anti mode
+    """
+    return _convert_bool_to_str(~convert_str_to_bool(_find_most_common(df)))
+
+
 def extract_rate_as_int(df: pd.DataFrame) -> pd.DataFrame:
     """
     extract rate as integer from dataframe
     """
-    list_of_ints = convert_bool_to_str(df).iloc[0].to_list()
+    list_of_ints = _convert_bool_to_str(df).iloc[0].to_list()
     binary_str = "".join(list_of_ints)
     return int(binary_str, 2)
+
+
+def _modified_mode_for_duplicates(df: pd.DataFrame, favoured: str) -> str:
+    """
+    in the event that there are multiple modal values then pick the favoured one
+    """
+    return df.values[0] if len(df) == 1 else favoured
+
+
+def loop_through_df_to_compute_rates(df: pd.DataFrame, favoured: str) -> int:
+    """
+    loop through the dataframe and find the mode and then compute the rate
+    """
+    for i in range(df.shape[1]):
+        if df.shape[0] == 1:
+            # require at least one row
+            break
+        df_column = df.iloc[:, i]
+        common = (
+            _modified_mode_for_duplicates(_find_most_common(df_column), "1")
+            if favoured == "1"
+            else _modified_mode_for_duplicates(_find_least_common(df_column), "0")
+        )
+        matching = df_column == common
+        df = df.loc[matching].reset_index(drop=True)
+    return extract_rate_as_int(df)
