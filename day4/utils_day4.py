@@ -33,3 +33,10 @@ def compute_bingo_score(matched_grid: np.ndarray, final_number: int) -> int:
     """
     matched_grid[matched_grid == CALLED] = 0
     return matched_grid.sum() * final_number
+
+
+def check_whole_grids_not_been_called(grids: np.ndarray) -> np.ndarray:
+    """
+    if the grid has already been matched then we don't want it
+    """
+    return ~(grids == CALLED).all(axis=tuple(GRID_LABELS.values()))
