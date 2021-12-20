@@ -1,5 +1,8 @@
 import pandas as pd
 
+FAVOURED = dict(most_common="1", least_common="0")
+NAME = "binary"
+
 
 def _convert_str_to_bool(df: pd.DataFrame) -> pd.DataFrame:
     """

@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 from utils_day3 import (
+    FAVOURED,
+    NAME,
     create_df_of_one_and_zero,
     extract_rate_as_int,
     find_least_common,
@@ -11,8 +13,6 @@ from utils_day3 import (
 
 _file_location = Path(__file__).resolve()
 _data_path = _file_location.parent
-FAVOURED = dict(most_common="1", least_common="0")
-NAME = "binary"
 
 
 def read_data(filename: str) -> pd.DataFrame:
