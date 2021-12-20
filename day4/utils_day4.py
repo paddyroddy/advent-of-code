@@ -1,5 +1,6 @@
 import numpy as np
 
+CALLED = -1
 GRID_SIZE = dict(n_rows=5, n_cols=5)
 
 
