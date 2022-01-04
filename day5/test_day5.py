@@ -14,5 +14,5 @@ def test_num_points_overlapping(dummy_data) -> None:
     checks the number of points overlapped
     """
     expected = 5
-    computed = compute_how_many_points_overlap(*dummy_data)
+    computed = compute_how_many_points_overlap(dummy_data)
     assert computed == expected
