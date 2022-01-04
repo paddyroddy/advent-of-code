@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 
-NAMES = ["x1", "y1", "x2", "y2"]
-
 
 def _swap_index_order_for_slcing(idx1: int, idx2: int) -> tuple[int, int]:
     """
@@ -12,26 +10,25 @@ def _swap_index_order_for_slcing(idx1: int, idx2: int) -> tuple[int, int]:
     return idx1, idx2 + 1
 
 
-def _fill_horizontal_lines(grid: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+def _compute_horizontal_lines(df) -> pd.DataFrame:
     """
-    helper function to fill the horizontal lines in the grid
+    create mask for horizontal lines
     """
-    horizontal = df[NAMES[1]] == df[NAMES[3]]
-    for _, row in df.loc[horizontal].iterrows():
-        x1, x2 = _swap_index_order_for_slcing(row[NAMES[0]], row[NAMES[2]])
-        grid[row[NAMES[1]], x1:x2] += 1
-    return grid
+    return df["y1"] == df["y2"]
 
 
-def _fill_vertical_lines(grid: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+def _compute_vertical_lines(df) -> pd.DataFrame:
     """
-    helper function to fill the vertical lines in the grid
+    create mask for vertical lines
     """
-    vertical = df[NAMES[0]] == df[NAMES[2]]
-    for _, row in df.loc[vertical].iterrows():
-        y1, y2 = _swap_index_order_for_slcing(row[NAMES[1]], row[NAMES[3]])
-        grid[y1:y2, row[NAMES[0]]] += 1
-    return grid
+    return df["x1"] == df["x2"]
+
+
+def _find_sign(coord1: int, coord2: int) -> int:
+    """
+    helper method to check if numbers decreasing in order
+    """
+    return np.sign(coord2 - coord1)
 
 
 def create_output_grid(df: pd.DataFrame) -> np.ndarray:
@@ -42,12 +39,43 @@ def create_output_grid(df: pd.DataFrame) -> np.ndarray:
     return np.zeros((size, size))
 
 
-def fill_values_in_grid(grid: np.ndarray, df: pd.DataFrame) -> np.ndarray:
+def fill_horizontal_lines(grid: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
     """
-    fill the grid with the values of the input dataframe
+    helper function to fill the horizontal lines in the grid
     """
-    grid = _fill_horizontal_lines(grid, df)
-    grid = _fill_vertical_lines(grid, df)
+    horizontal = _compute_horizontal_lines(df)
+    for _, row in df.loc[horizontal].iterrows():
+        x1, x2 = _swap_index_order_for_slcing(row["x1"], row["x2"])
+        grid[x1:x2, row["y1"]] += 1
+    return grid
+
+
+def fill_vertical_lines(grid: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    """
+    helper function to fill the vertical lines in the grid
+    """
+    vertical = _compute_vertical_lines(df)
+    for _, row in df.loc[vertical].iterrows():
+        y1, y2 = _swap_index_order_for_slcing(row["y1"], row["y2"])
+        grid[row["x1"], y1:y2] += 1
+    return grid
+
+
+def fill_diagonal_lines(grid: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
+    """
+    helper function to fill the diagonal lines in the grid
+    """
+    horizontal = _compute_horizontal_lines(df)
+    vertical = _compute_vertical_lines(df)
+    diagonal = ~horizontal & ~vertical
+    for _, row in df.loc[diagonal].iterrows():
+        x_sign = _find_sign(row["x1"], row["x2"])
+        y_sign = _find_sign(row["y1"], row["y2"])
+        for x, y in zip(
+            range(row["x1"], row["x2"] + x_sign, x_sign),
+            range(row["y1"], row["y2"] + y_sign, y_sign),
+        ):
+            grid[x, y] += 1
     return grid
 
 

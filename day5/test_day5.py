@@ -1,7 +1,11 @@
 import pandas as pd
 import pytest
 
-from day5 import compute_how_many_points_overlap, read_data
+from day5 import (
+    compute_how_many_points_overlap,
+    compute_overlapping_points_with_diagonals,
+    read_data,
+)
 
 
 @pytest.fixture
@@ -15,4 +19,13 @@ def test_num_points_overlapping(dummy_data) -> None:
     """
     expected = 5
     computed = compute_how_many_points_overlap(dummy_data)
+    assert computed == expected
+
+
+def test_num_points_with_diagonals(dummy_data) -> None:
+    """
+    checks the number of points overlapped with diagonals
+    """
+    expected = 12
+    computed = compute_overlapping_points_with_diagonals(dummy_data)
     assert computed == expected
