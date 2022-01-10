@@ -1,5 +1,8 @@
 import numpy as np
 
+BREEDING_TIME = 9
+REPRODUCE_TIME = 7
+
 
 def _find_indices_which_changed(
     old_fish_timers: np.ndarray, new_fish_timers: np.ndarray
@@ -46,10 +49,3 @@ def increment_day(fish_timers: np.ndarray) -> np.ndarray:
     new_fish_timers = _handle_zero_timer(fish_timers.copy())
     changed_indices = _find_indices_which_changed(fish_timers, new_fish_timers)
     return _decrement_fish_timers(new_fish_timers, changed_indices)
-
-
-def compute_number_of_fish(fish_timers: np.ndarray) -> int:
-    """
-    compute the number of fish in the list of timers
-    """
-    return len(fish_timers)
