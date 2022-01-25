@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-
 from day4 import (
     find_who_first_won_bingo_and_compute_score,
     find_who_last_won_bingo_and_compute_score,

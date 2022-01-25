@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from day5 import (
     compute_how_many_points_overlap,
     compute_overlapping_points_with_diagonals,

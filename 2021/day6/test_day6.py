@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-
 from day6 import (
     compute_number_of_lantern_fish,
     read_data,

@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from day3 import (
     compute_life_support_rating_submarine,
     compute_power_consumption_submarine,

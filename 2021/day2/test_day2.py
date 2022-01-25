@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from day2 import (
     compute_horizontal_depth_product,
     compute_product_factoring_in_aim,
