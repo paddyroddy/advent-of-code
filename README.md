@@ -1,4 +1,4 @@
-# Advent of Code 2021
+# Advent of Code
 
 A few advent of code examples to discuss with colleagues
 
