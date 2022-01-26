@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from day7 import compute_minimum_fuel_cost, read_data
+from day7 import compute_minimum_fuel_cost, compute_new_minimum_fuel_cost, read_data
 
 
 @pytest.fixture
@@ -14,4 +14,13 @@ def test_fuel_cost(dummy_data) -> None:
     """
     expected = 37
     computed = compute_minimum_fuel_cost(dummy_data)
+    assert computed == expected
+
+
+def test_new_fuel_cost(dummy_data) -> None:
+    """
+    checks the amount of fuel is as expected with new algorithm
+    """
+    expected = 170
+    computed = compute_new_minimum_fuel_cost(dummy_data)
     assert computed == expected
