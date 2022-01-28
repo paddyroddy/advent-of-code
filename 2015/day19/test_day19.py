@@ -21,10 +21,10 @@ def test_num_distinct_molecules(dummy_data) -> None:
     assert computed == expected
 
 
-@pytest.mark.parametrize("output_string,expected", [("HOH", 3), ("HOHOHOH", 6)])
-def test_steps_required_to_make_medicine(dummy_data, output_string, expected) -> None:
+@pytest.mark.parametrize("output_string,expected", [("HOH", 3), ("HOHOHO", 6)])
+def test_steps_required_to_make_medicine(output_string, expected) -> None:
     """
     compute the number of steps required to make medicine
     """
-    computed = compute_steps_required_to_make_medicine(dummy_data[0], output_string)
+    computed = compute_steps_required_to_make_medicine(output_string)
     assert computed == expected
