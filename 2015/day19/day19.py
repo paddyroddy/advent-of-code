@@ -62,5 +62,5 @@ def compute_steps_required_to_make_medicine(medicine_string: str) -> int:
 
 if __name__ == "__main__":
     rules, medicine_string = read_data("data_day19.txt")
-    # compute_num_distinct_molecules(rules, medicine_string)
+    compute_num_distinct_molecules(rules, medicine_string)
     compute_steps_required_to_make_medicine(medicine_string)
