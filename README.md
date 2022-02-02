@@ -12,6 +12,11 @@ For each day there is a folder i.e. `day1` with a file `day1.py` in it.
 ## Testing
 
 In top directory run `pytest -v`.
+
 ## Formatting
 
-Execute `pip install -r requirements.txt; pre-commit install` to install git hooks in your `.git/` directory.
+To install `pre-commit` hooks locally, execute `pip install pre-commit`
+followed by `pre-commit install`. This only needs to be done once per repo,
+and from then on checks are made whenever committing. See steps
+[here](https://pre-commit.com/#automatically-enabling-pre-commit-on-repositories)
+to enable these checks always.
