@@ -41,10 +41,19 @@ def count_total_output_value(notes: pd.DataFrame) -> int:
     """
     count the total value of each output set of numbers
     """
-    df_input = notes.iloc[:, notes.columns.str.startswith("input")]
-    string_lengths = find_all_string_lengths(df_input)
-    letter_mappings = determine_character_mappings(df_input, string_lengths)
-    pass
+    # df_input = notes.iloc[:, notes.columns.str.startswith("input")]
+    # df_output = notes.iloc[:, notes.columns.str.startswith("output")]
+    string_lengths = find_all_string_lengths(notes)
+    letter_mappings = determine_character_mappings(notes, string_lengths)
+    count = (
+        letter_mappings.iloc[:, notes.columns.str.startswith("output")]
+        .astype(str)
+        .apply(lambda x: "".join(x), axis=1)
+        .astype(int)
+        .sum()
+    )
+    print(f"Q2 count: {count}")
+    return count
 
 
 if __name__ == "__main__":

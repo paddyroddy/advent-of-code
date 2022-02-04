@@ -1,6 +1,3 @@
-import re
-
-import numpy as np
 import pandas as pd
 
 DISPLAY = pd.DataFrame(
@@ -21,14 +18,14 @@ DISPLAY = pd.DataFrame(
 
 
 def _find_letters_representing_string_length(
-    df_notes: pd.DataFrame, df_str_len: pd.DataFrame, str_len: int
+    df_notes: pd.DataFrame, df_str_len: pd.DataFrame, character: int
 ) -> pd.DataFrame:
     """
     helper method to find the letters that represent the string length
     https://stackoverflow.com/a/31861396/7359333
     """
     return (
-        df_notes.where(df_str_len == DISPLAY.iloc[str_len].sum())
+        df_notes.where(df_str_len == DISPLAY.loc[character].sum())
         .stack()
         .groupby(level=0)
         .first()
@@ -36,16 +33,19 @@ def _find_letters_representing_string_length(
     )
 
 
-def _remove_characters_from_df(
-    first_instance: dict[int, pd.DataFrame], more_segments: int, fewer_segments: int
-) -> pd.DataFrame:
-    """
-    removes the characters in df_more_char from df_less_char
-    """
-    # regex used because characters in different orders
-    return first_instance[more_segments].combine(
-        first_instance[fewer_segments], lambda x, y: re.sub(rf"[{y}]", "", x)
-    )
+# def _remove_characters_from_df(
+#     first_instance: dict[int, pd.DataFrame], more_segments: int, fewer_segments: int
+# ) -> pd.DataFrame:
+#     """
+#     removes the characters in df_more_char from df_less_char
+#     """
+#     # regex used because characters in different orders
+#     swap_chars = first_instance[more_segments].combine(
+#         first_instance[fewer_segments], lambda x, y: re.sub(rf"[{y}]", "", x)
+#     )
+#     # if more than one letter returned don't swap
+#     swap_chars[swap_chars.str.len() > 1] = None
+#     return swap_chars
 
 
 def create_columns(content: list[str]) -> list[str]:
@@ -71,27 +71,68 @@ def find_all_string_lengths(df: pd.DataFrame) -> pd.DataFrame:
 
 def determine_character_mappings(
     df_notes: pd.DataFrame, df_str_len: pd.DataFrame
-) -> None:
+) -> pd.DataFrame:
     """
     determine how each character is mapped in the display
     """
-    # create dataframe to store final mappings
-    letter_mapping = pd.DataFrame(
-        np.empty(DISPLAY.shape, dtype=object), columns=DISPLAY.columns
-    )
+    # avoid overwriting the original dataframe
+    letter_mappings = df_notes.copy()
 
-    # find first instance of each string length
-    first_instance = dict()
-    for i in range(letter_mapping.shape[0]):
-        first_instance[i] = _find_letters_representing_string_length(
-            df_notes, df_str_len, i
+    unique_segments = [1, 4, 7, 8]
+    for u in unique_segments:
+        letter_mappings[df_str_len == DISPLAY.loc[u].sum()] = u
+
+    # 4 is part of 9
+    four = _find_letters_representing_string_length(df_notes, df_str_len, 4)
+    letter_mappings[
+        (df_str_len == DISPLAY.loc[9].sum())
+        & (
+            df_notes.applymap(lambda x: set(x))
+            .subtract(four.apply(lambda x: set(x)), axis=0)
+            .applymap(lambda x: len(x))
+            > 0
         )
+    ] = 9
 
-    # fill in character mapping following rules
-    mapping_dict = dict(a=(7, 1), d=(8, 0), e=(6, 5))
-    for char, (more_segments, fewer_segments) in mapping_dict.items():
-        letter_mapping[char] = _remove_characters_from_df(
-            first_instance, more_segments, fewer_segments
+    # 1 is part of 0
+    one = _find_letters_representing_string_length(df_notes, df_str_len, 1)
+    letter_mappings[
+        (df_str_len == DISPLAY.loc[0].sum())
+        & (
+            df_notes.applymap(lambda x: set(x))
+            .subtract(one.apply(lambda x: set(x)), axis=0)
+            .applymap(lambda x: len(x))
+            > 0
         )
+    ] = 0
 
-    return letter_mapping
+    # otherwise its 6
+    letter_mappings[df_str_len == DISPLAY.loc[6].sum()] = 6
+
+    # 5 is part of 6
+    five = _find_letters_representing_string_length(df_notes, df_str_len, 5)
+    letter_mappings[
+        (df_str_len == DISPLAY.loc[5].sum())
+        & (
+            df_notes.applymap(lambda x: set(x))
+            .subtract(five.apply(lambda x: set(x)), axis=0)
+            .applymap(lambda x: len(x))
+            > 0
+        )
+    ] = 6
+
+    # 1 is part of 3
+    five = _find_letters_representing_string_length(df_notes, df_str_len, 5)
+    letter_mappings[
+        (df_str_len == DISPLAY.loc[3].sum())
+        & (
+            df_notes.applymap(lambda x: set(x))
+            .subtract(one.apply(lambda x: set(x)), axis=0)
+            .applymap(lambda x: len(x))
+            > 0
+        )
+    ] = 3
+
+    letter_mappings[df_str_len == DISPLAY.loc[5].sum()] = 2
+
+    return letter_mappings
