@@ -22,7 +22,7 @@ def count_digits_1_4_7_8(notes: pd.DataFrame) -> int:
     which have a unique number of segments and hence are easy to calculate
     """
     output_df = notes.iloc[:, notes.columns.str.startswith("output")]
-    string_lengths = output_df.applymap(lambda x: len(str(x)))
+    string_lengths = output_df.applymap(lambda x: len(x))
     count = string_lengths.isin(
         [SEGMENTS[1], SEGMENTS[4], SEGMENTS[7], SEGMENTS[8]]
     ).values.sum()
