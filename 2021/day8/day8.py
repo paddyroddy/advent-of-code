@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from utils_day8 import SEGMENTS, create_columns
+from utils_day8 import DISPLAY, create_columns, find_all_string_lengths
 
 _file_location = Path(__file__).resolve()
 _data_path = _file_location.parent
@@ -22,13 +22,29 @@ def count_digits_1_4_7_8(notes: pd.DataFrame) -> int:
     which have a unique number of segments and hence are easy to calculate
     """
     output_df = notes.iloc[:, notes.columns.str.startswith("output")]
-    string_lengths = output_df.applymap(lambda x: len(x))
+    string_lengths = find_all_string_lengths(output_df)
     numbers_of_interest = [1, 4, 7, 8]
-    count = string_lengths.isin({SEGMENTS[n] for n in numbers_of_interest}).values.sum()
+    count = string_lengths.isin(
+        DISPLAY.loc[numbers_of_interest].sum(axis="columns").values
+    ).values.sum()
     print(f"Q1 count: {count}")
     return count
 
 
+# def count_total_output_value(notes: pd.DataFrame) -> int:
+#     """
+#     count the total value of each output set of numbers
+#     """
+#     string_lengths = find_all_string_lengths(notes)
+#     for number, details in SEGMENTS.items():
+#         if number != len(LETTERS) + 1:
+#             pass
+#         else:
+#             # if number is 8 then assign to all letters
+#             details["letters"] = LETTERS
+
+
 if __name__ == "__main__":
-    notes = read_data("data_day8.txt")
+    notes = read_data("dummy_day8.txt")
     count_digits_1_4_7_8(notes)
+    # count_total_output_value(notes)
