@@ -2,9 +2,10 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from utils_day8 import (  # determine_character_mappings,
+from utils_day8 import (
     DISPLAY,
     create_columns,
+    determine_character_mappings,
     find_all_string_lengths,
 )
 
@@ -26,8 +27,8 @@ def count_digits_1_4_7_8(notes: pd.DataFrame) -> int:
     count the number of digits in the output that are 1, 4, 7, or 8
     which have a unique number of segments and hence are easy to calculate
     """
-    output_df = notes.iloc[:, notes.columns.str.startswith("output")]
-    string_lengths = find_all_string_lengths(output_df)
+    df_output = notes.iloc[:, notes.columns.str.startswith("output")]
+    string_lengths = find_all_string_lengths(df_output)
     numbers_of_interest = {1, 4, 7, 8}
     count = string_lengths.isin(
         DISPLAY.loc[numbers_of_interest].sum(axis="columns").values
@@ -40,19 +41,10 @@ def count_total_output_value(notes: pd.DataFrame) -> int:
     """
     count the total value of each output set of numbers
     """
-    # string_lengths = find_all_string_lengths(notes)
-    # letter_mappings = determine_character_mappings(notes, string_lengths)
-    # one = find_letters_representing_string_length(notes, string_lengths, 1)
-    # seven = find_letters_representing_string_length(notes, string_lengths, 7)
-    # LETTER_MAPPING["a"] = remove_characters_from_df(seven, one)
-    # eight = find_letters_representing_string_length(notes, string_lengths, 8)
-    # zero = find_letters_representing_string_length(notes, string_lengths, 0)
-    # LETTER_MAPPING["d"] = remove_characters_from_df(eight, zero)
-    # six = find_letters_representing_string_length(notes, string_lengths, 6)
-    # five = find_letters_representing_string_length(notes, string_lengths, 5)
-    # LETTER_MAPPING["e"] = remove_characters_from_df(six, five)
-    # nine = find_letters_representing_string_length(notes, string_lengths, 9)
-    return 0
+    df_input = notes.iloc[:, notes.columns.str.startswith("input")]
+    string_lengths = find_all_string_lengths(df_input)
+    letter_mappings = determine_character_mappings(df_input, string_lengths)
+    pass
 
 
 if __name__ == "__main__":
