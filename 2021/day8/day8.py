@@ -23,9 +23,8 @@ def count_digits_1_4_7_8(notes: pd.DataFrame) -> int:
     """
     output_df = notes.iloc[:, notes.columns.str.startswith("output")]
     string_lengths = output_df.applymap(lambda x: len(x))
-    count = string_lengths.isin(
-        [SEGMENTS[1], SEGMENTS[4], SEGMENTS[7], SEGMENTS[8]]
-    ).values.sum()
+    numbers_of_interest = [1, 4, 7, 8]
+    count = string_lengths.isin({SEGMENTS[n] for n in numbers_of_interest}).values.sum()
     print(f"Q1 count: {count}")
     return count
 
