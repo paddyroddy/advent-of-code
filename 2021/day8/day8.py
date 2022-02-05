@@ -3,10 +3,14 @@ from pathlib import Path
 
 import pandas as pd
 from utils_day8 import (
-    DISPLAY,
+    SEGMENTS,
+    UNIQUE_NUMBERS,
+    compute_final_count,
     create_columns,
-    determine_character_mappings,
     find_all_string_lengths,
+    map_the_length_5_digits,
+    map_the_length_6_digits,
+    map_the_unique_letters,
 )
 
 _file_location = Path(__file__).resolve()
@@ -29,10 +33,7 @@ def count_digits_1_4_7_8(notes: pd.DataFrame) -> int:
     """
     df_output = notes.iloc[:, notes.columns.str.startswith("output")]
     string_lengths = find_all_string_lengths(df_output)
-    numbers_of_interest = {1, 4, 7, 8}
-    count = string_lengths.isin(
-        DISPLAY.loc[numbers_of_interest].sum(axis="columns").values
-    ).values.sum()
+    count = string_lengths.isin([SEGMENTS[u] for u in UNIQUE_NUMBERS]).values.sum()
     print(f"Q1 count: {count}")
     return count
 
@@ -41,22 +42,28 @@ def count_total_output_value(notes: pd.DataFrame) -> int:
     """
     count the total value of each output set of numbers
     """
-    # df_input = notes.iloc[:, notes.columns.str.startswith("input")]
-    # df_output = notes.iloc[:, notes.columns.str.startswith("output")]
-    string_lengths = find_all_string_lengths(notes)
-    letter_mappings = determine_character_mappings(notes, string_lengths)
-    count = (
-        letter_mappings.iloc[:, notes.columns.str.startswith("output")]
-        .astype(str)
-        .apply(lambda x: "".join(x), axis=1)
-        .astype(int)
-        .sum()
-    )
+    # working with pandas directly became unmanageable
+    # split into input and output columns
+    input_array = notes.iloc[:, notes.columns.str.startswith("input")].values
+    output_array = notes.iloc[:, notes.columns.str.startswith("output")].values
+
+    # initialise count
+    count = 0
+
+    for i in range(len(input_array)):
+        # create a unique letter mapping dict per loop
+        letter_mappings: dict[int, str] = dict()
+
+        map_the_unique_letters(input_array[i], letter_mappings)
+        map_the_length_6_digits(input_array[i], letter_mappings)
+        map_the_length_5_digits(input_array[i], letter_mappings)
+        count += compute_final_count(output_array[i], letter_mappings)
+
     print(f"Q2 count: {count}")
     return count
 
 
 if __name__ == "__main__":
-    notes = read_data("dummy_day8.txt")
-    # count_digits_1_4_7_8(notes)
+    notes = read_data("data_day8.txt")
+    count_digits_1_4_7_8(notes)
     count_total_output_value(notes)
