@@ -5,6 +5,7 @@ from utils_day9 import (
     check_if_low_point,
     compute_risk_from_height,
     find_neighbours_of_element,
+    recursive_check_in_basin,
 )
 
 _file_location = Path(__file__).resolve()
@@ -40,12 +41,16 @@ def compute_multiplication_of_largest_basins(
     """
     compute the mulplication of the three largest basins
     """
+    basin_size: dict[tuple[int, int], int] = dict()
+    for low_point in low_points:
+        neighbours = recursive_check_in_basin(heights, [low_point])
+    # basin_size[low_point] = neighbours
     size = 1134
     print(f"Q1 level: {size}")
     return size
 
 
 if __name__ == "__main__":
-    heights = read_data("data_day9.txt")
+    heights = read_data("dummy_day9.txt")
     _, low_points = compute_risk_level_sum(heights)
     compute_multiplication_of_largest_basins(heights, low_points)
