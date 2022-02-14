@@ -17,7 +17,7 @@ def read_data(filename: str) -> np.ndarray:
     return np.array([list(s) for s in content], dtype=int)
 
 
-def compute_risk_level_sum(heights: np.ndarray) -> int:
+def compute_risk_level_sum(heights: np.ndarray) -> tuple[int, list[int]]:
     """
     compute the sum of the risk levels of the given data
     """
@@ -29,10 +29,12 @@ def compute_risk_level_sum(heights: np.ndarray) -> int:
                 low_points.append(heights[row, col])
     level = sum(compute_risk_from_height(low_point) for low_point in low_points)
     print(f"Q1 level: {level}")
-    return level
+    return level, low_points
 
 
-def compute_multiplication_of_largest_basins(heights: np.ndarray) -> int:
+def compute_multiplication_of_largest_basins(
+    heights: np.ndarray, low_points: list[int]
+) -> int:
     """
     compute the mulplication of the three largest basins
     """
@@ -43,4 +45,5 @@ def compute_multiplication_of_largest_basins(heights: np.ndarray) -> int:
 
 if __name__ == "__main__":
     heights = read_data("data_day9.txt")
-    compute_risk_level_sum(heights)
+    _, low_points = compute_risk_level_sum(heights)
+    compute_multiplication_of_largest_basins(heights, low_points)
