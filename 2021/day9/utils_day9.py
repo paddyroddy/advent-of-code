@@ -20,11 +20,11 @@ def find_neighbours_of_element(
     return neighbours
 
 
-def compute_risk_from_height(heights: np.ndarray, row: int, col: int) -> int:
+def compute_risk_from_height(height: int) -> int:
     """
     compute the risk level of the given height
     """
-    return heights[row, col] + 1
+    return height + 1
 
 
 def check_if_low_point(

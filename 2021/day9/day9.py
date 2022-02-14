@@ -26,8 +26,8 @@ def compute_risk_level_sum(heights: np.ndarray) -> int:
         for col in range(heights.shape[1]):
             neighbours = find_neighbours_of_element(heights, row, col)
             if check_if_low_point(heights, row, col, neighbours):
-                low_points.append(compute_risk_from_height(heights, row, col))
-    level = sum(low_points)
+                low_points.append(heights[row, col])
+    level = sum(compute_risk_from_height(low_point) for low_point in low_points)
     print(f"Q1 level: {level}")
     return level
 
