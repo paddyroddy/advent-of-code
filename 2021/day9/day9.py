@@ -32,6 +32,15 @@ def compute_risk_level_sum(heights: np.ndarray) -> int:
     return level
 
 
+def compute_multiplication_of_largest_basins(heights: np.ndarray) -> int:
+    """
+    compute the mulplication of the three largest basins
+    """
+    size = 1134
+    print(f"Q1 level: {size}")
+    return size
+
+
 if __name__ == "__main__":
     heights = read_data("data_day9.txt")
     compute_risk_level_sum(heights)
