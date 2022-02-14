@@ -13,7 +13,7 @@ def dummy_data() -> np.ndarray:
 
 
 @pytest.fixture
-def risk_level(dummy_data) -> tuple[int, list[int]]:
+def risk_level(dummy_data) -> tuple[int, list[tuple[int, int]]]:
     return compute_risk_level_sum(dummy_data)
 
 
@@ -25,7 +25,7 @@ def test_risk_level_as_expected(risk_level) -> None:
     assert risk_level[0] == expected
 
 
-def test_basin_size_as_expected(risk_level) -> None:
+def test_basin_size_as_expected(dummy_data, risk_level) -> None:
     """
     check risk level sum is anticiapted
     """
