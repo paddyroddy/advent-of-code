@@ -2,22 +2,19 @@ import numpy as np
 
 
 def find_neighbours_of_element(
-    data: np.ndarray, row: int, col: int, num_neighbour: int = 1
+    data: np.ndarray, row: int, col: int
 ) -> set[tuple[int, int]]:
     """
     find the horizontal and vertical neighbours of the element at the given index
     """
-    neighbours: list[tuple[int, int]] = []
-    for r in range(-num_neighbour, num_neighbour + 1):
-        curr_row = row + r
-        if curr_row >= 0 and curr_row <= data.shape[0] - 1:
-            for colAdd in range(-num_neighbour, num_neighbour + 1):
-                curr_col = col + colAdd
-                if curr_col >= 0 and curr_col <= data.shape[1] - 1:
-                    if curr_col == col and curr_row == row:
-                        continue
-                    neighbours.append((curr_row, curr_col))
-    return set(neighbours)
+    neighbours = [(row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)]
+    return set(
+        filter(
+            lambda coord: 0 <= coord[0] < data.shape[0]
+            and 0 <= coord[1] < data.shape[1],
+            neighbours,
+        )
+    )
 
 
 def compute_risk_from_height(height: int) -> int:
