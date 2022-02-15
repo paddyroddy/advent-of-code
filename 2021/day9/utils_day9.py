@@ -1,5 +1,8 @@
 import numpy as np
 
+NON_BASIN = 9
+VISITED = -1
+
 
 def find_neighbours_of_element(
     data: np.ndarray, row: int, col: int
@@ -41,9 +44,9 @@ def recursive_check_in_basin(
     check if the given element is in the current basin
     """
     size = 0
-    if data[point] != -1 and data[point] != 9:
+    if data[point] != VISITED and data[point] != NON_BASIN:
         size = 1
-        data[point] = -1
+        data[point] = VISITED
         neighbours = find_neighbours_of_element(data, *point)
         for neighbour in neighbours:
             size += recursive_check_in_basin(data, neighbour)
