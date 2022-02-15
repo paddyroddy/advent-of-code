@@ -5,6 +5,7 @@ from utils_day9 import (
     check_if_low_point,
     compute_risk_from_height,
     find_neighbours_of_element,
+    multiply_three_largest,
     recursive_check_in_basin,
 )
 
@@ -43,10 +44,9 @@ def compute_multiplication_of_largest_basins(
     """
     basin_size: dict[tuple[int, int], int] = dict()
     for low_point in low_points:
-        neighbours = recursive_check_in_basin(heights, [low_point])
-    # basin_size[low_point] = neighbours
-    size = 1134
-    print(f"Q1 level: {size}")
+        basin_size[low_point] = recursive_check_in_basin(heights.copy(), low_point)
+    size = multiply_three_largest(basin_size)
+    print(f"Q2 size: {size}")
     return size
 
 

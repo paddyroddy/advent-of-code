@@ -3,7 +3,7 @@ import numpy as np
 
 def find_neighbours_of_element(
     data: np.ndarray, row: int, col: int, num_neighbour: int = 1
-) -> list[tuple[int, int]]:
+) -> set[tuple[int, int]]:
     """
     find the horizontal and vertical neighbours of the element at the given index
     """
@@ -17,7 +17,7 @@ def find_neighbours_of_element(
                     if curr_col == col and curr_row == row:
                         continue
                     neighbours.append((curr_row, curr_col))
-    return neighbours
+    return set(neighbours)
 
 
 def compute_risk_from_height(height: int) -> int:
@@ -28,7 +28,7 @@ def compute_risk_from_height(height: int) -> int:
 
 
 def check_if_low_point(
-    heights: np.ndarray, row: int, col: int, neighbours: list[tuple[int, int]]
+    heights: np.ndarray, row: int, col: int, neighbours: set[tuple[int, int]]
 ) -> bool:
     """
     check if the given element is a low point
@@ -37,12 +37,24 @@ def check_if_low_point(
 
 
 def recursive_check_in_basin(
-    data: np.ndarray, low_point: list[tuple[int, int]]
-) -> None:
+    data: np.ndarray,
+    point: tuple[int, int],
+) -> int:
     """
     check if the given element is in the current basin
     """
-    for point in low_point:
-        set_of_points = find_neighbours_of_element(data, *point)
-        non_nine = [p for p in set_of_points if data[p] != 9]
-    return recursive_check_in_basin(data, set_of_points)
+    size = 0
+    if data[point] != -1 and data[point] != 9:
+        size = 1
+        data[point] = -1
+        neighbours = find_neighbours_of_element(data, *point)
+        for neighbour in neighbours:
+            size += recursive_check_in_basin(data, neighbour)
+    return size
+
+
+def multiply_three_largest(basin_sizes: dict[tuple[int, int], int]) -> int:
+    """
+    final result is the multiplication of the three largest basins
+    """
+    return np.prod(sorted(basin_sizes, reverse=True)[:3])
