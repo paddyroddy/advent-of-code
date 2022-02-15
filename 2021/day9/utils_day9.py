@@ -53,7 +53,7 @@ def recursive_check_in_basin(
     return size
 
 
-def multiply_three_largest(basin_sizes: dict[tuple[int, int], int]) -> int:
+def multiply_largest(basin_sizes: dict[tuple[int, int], int], num_to_pick: int) -> int:
     """
     final result is the multiplication of the three largest basins
     """
