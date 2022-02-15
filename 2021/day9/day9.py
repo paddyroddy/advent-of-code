@@ -51,6 +51,6 @@ def compute_multiplication_of_largest_basins(
 
 
 if __name__ == "__main__":
-    heights = read_data("dummy_day9.txt")
+    heights = read_data("data_day9.txt")
     _, low_points = compute_risk_level_sum(heights)
     compute_multiplication_of_largest_basins(heights, low_points)

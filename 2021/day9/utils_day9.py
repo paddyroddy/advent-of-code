@@ -54,4 +54,4 @@ def multiply_three_largest(basin_sizes: dict[tuple[int, int], int]) -> int:
     """
     final result is the multiplication of the three largest basins
     """
-    return np.prod(sorted(basin_sizes, reverse=True)[:3])
+    return np.prod(sorted(basin_sizes.values(), reverse=True)[:3])
