@@ -23,7 +23,7 @@ def compute_risk_level_sum(heights: np.ndarray) -> tuple[int, list[tuple[int, in
     """
     compute the sum of the risk levels of the given data
     """
-    low_points: list[tuple[int, int]] = []
+    low_points: list[tuple[int, int]] = list()
     for row in range(heights.shape[0]):
         for col in range(heights.shape[1]):
             neighbours = find_neighbours_of_element(heights, row, col)
