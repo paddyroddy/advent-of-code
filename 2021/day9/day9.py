@@ -44,7 +44,7 @@ def compute_multiplication_of_largest_basins(
     """
     basin_size: dict[tuple[int, int], int] = dict()
     for low_point in low_points:
-        basin_size[low_point] = recursive_check_in_basin(heights.copy(), low_point)
+        basin_size[low_point] = recursive_check_in_basin(heights, low_point)
     size = multiply_largest(basin_size, 3)
     print(f"Q2 size: {size}")
     return size

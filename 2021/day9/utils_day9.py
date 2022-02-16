@@ -44,7 +44,7 @@ def recursive_check_in_basin(
     check if the given element is in the current basin
     """
     size = 0
-    if data[point] != VISITED and data[point] != NON_BASIN:
+    if VISITED < data[point] < NON_BASIN:
         size = 1
         data[point] = VISITED
         neighbours = find_neighbours_of_element(data, *point)
