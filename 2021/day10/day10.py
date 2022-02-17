@@ -1,6 +1,7 @@
+from collections import Counter
 from pathlib import Path
 
-from utils_day10 import compute_score_from_chars, find_if_line_corrupted
+from utils_day10 import check_if_line_corrupted, compute_score_from_chars
 
 _file_location = Path(__file__).resolve()
 _data_path = _file_location.parent
@@ -16,13 +17,12 @@ def compute_total_syntax_error_score(data: list[str]) -> int:
     """
     finds the corrupted data and then compute the score
     """
-    # find_if_line_corrupted(data[0])
-    find_if_line_corrupted(data[2])
-    score = compute_score_from_chars({"}": 1, "]": 2, ")": 3})
+    offending_chars = Counter(c for c in map(check_if_line_corrupted, data) if c)
+    score = compute_score_from_chars(offending_chars)
     print(f"Q1 score: {score}")
     return score
 
 
 if __name__ == "__main__":
-    navigation = read_data("dummy_day10.txt")
+    navigation = read_data("data_day10.txt")
     compute_total_syntax_error_score(navigation)

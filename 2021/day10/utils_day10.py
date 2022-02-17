@@ -1,27 +1,32 @@
+from collections import Counter
+
 ILLEGAL_CHARS_SCORES = {")": 3, "]": 57, "}": 1197, ">": 25137}
 MATCHING_BRACKETS = {"(": ")", "[": "]", "{": "}", "<": ">"}
+NOT_CORRUPTED = ""
 
 
-def find_if_line_corrupted(line: str) -> bool:
+def check_if_line_corrupted(line: str) -> str:
     """
-    checks if the line is corrupted
+    checks if the line is corrupted, if so return offending character
     """
     # initialise the stack of characters
     stack = list()
 
-    # create list of opening and closings
-    opening = list(MATCHING_BRACKETS.keys())
-    closing = list(MATCHING_BRACKETS.values())
-
-    # loop over line
+    # loop through line
     for char in line:
-        if char in opening:
+        if char in MATCHING_BRACKETS.keys():
+            # opening character, add to stack
             stack.append(char)
-        if char in closing:
+            continue
+        if char in MATCHING_BRACKETS.values():
+            # closing character, check if as expected
             candidate = stack.pop()
+            if char != MATCHING_BRACKETS[candidate]:
+                return char
+    return NOT_CORRUPTED
 
 
-def compute_score_from_chars(char_count: dict[str, int]) -> int:
+def compute_score_from_chars(char_count: Counter) -> int:
     """
     computes the score from the given charachter count
     """
