@@ -1,10 +1,9 @@
-import numpy as np
 import pytest
 from day10 import compute_total_syntax_error_score, read_data
 
 
 @pytest.fixture
-def dummy_data() -> np.ndarray:
+def dummy_data() -> list[str]:
     return read_data("dummy_day10.txt")
 
 
