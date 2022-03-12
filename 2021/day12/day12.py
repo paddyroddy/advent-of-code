@@ -1,11 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
-from utils_day12 import (
-    convert_df_to_dict,
-    recursive_check_for_paths,
-    recursive_check_for_paths_with_two_visits,
-)
+from utils_day12 import convert_df_to_dict, recursive_check_for_paths
 
 _file_location = Path(__file__).resolve()
 _data_path = _file_location.parent
@@ -22,7 +18,11 @@ def compute_how_many_paths(data: dict[str, list[str]]) -> int:
     small caves only once, what are the total number of paths that
     travel from the start to the end?
     """
-    paths = len(recursive_check_for_paths(data, "start", "end", [], []))
+    paths = len(
+        recursive_check_for_paths(
+            data, "start", "end", visit_small_twice=False, current_path=[], all_paths=[]
+        )
+    )
     print(f"Q1 paths: {paths}")
     return paths
 
@@ -31,7 +31,11 @@ def compute_number_paths_with_two_visits(data: dict[str, list[str]]) -> int:
     """
     now you can visit a small cave twice except for start/end
     """
-    paths = len(recursive_check_for_paths_with_two_visits(data, "start", "end", [], []))
+    paths = len(
+        recursive_check_for_paths(
+            data, "start", "end", visit_small_twice=True, current_path=[], all_paths=[]
+        )
+    )
     print(f"Q2 paths: {paths}")
     return paths
 
